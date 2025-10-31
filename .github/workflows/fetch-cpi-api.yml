@@ -1,0 +1,25 @@
+name: Fetch CPI Data Daily
+
+on:
+  schedule:
+    # This runs at midnight UTC every day (change the cron expression as needed)
+    - cron: '0 0 * * *'
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download CPI data from Transparency API
+        run: |
+          curl -o latest.json https://www.transparency.org/en/api/latest/cpi?x=58mQd8q6ImX8
+          
+      - name: Commit and push downloaded data
+        uses: EndBug/add-and-commit@v7
+        with:
+          author_name: 'GitHub Actions'
+          author_email: 'actions@github.com'
+          message: 'Update latest CPI data'
